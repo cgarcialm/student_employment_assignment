@@ -5,6 +5,9 @@ import com.google.ortools.linearsolver.MPObjective;
 import com.google.ortools.linearsolver.MPSolver;
 import com.google.ortools.linearsolver.MPVariable;
 
+/**
+ * This class represents a Student Employment Assignment problem solver.
+ */
 public class StudentEmploymentAssignment {
    private final int numStudents;
    private final int[] allStudents;
@@ -15,6 +18,11 @@ public class StudentEmploymentAssignment {
    MPSolver solver;
    MPObjective objective;
 
+   /**
+    * Constructor to initialize the StudentEmploymentAssignment instance with class preferences.
+    *
+    * @param classesPreferences The 2D array of student preferences for classes.
+    */
    public StudentEmploymentAssignment(final int[][] classesPreferences) {
       this.numClasses = classesPreferences[0].length;
       this.numStudents = classesPreferences.length;
@@ -23,6 +31,9 @@ public class StudentEmploymentAssignment {
       this.allStudents = IntStream.range(0, this.numStudents).toArray();
    }
 
+   /**
+    * Creates the solver instance for the problem.
+    */
    private void createSolver() {
       this.solver = MPSolver.createSolver("SCIP");
       if (this.solver == null) {
@@ -30,6 +41,9 @@ public class StudentEmploymentAssignment {
       }
    }
 
+   /**
+    * Creates the binary decision variables for student-class assignments.
+    */
    private void createVariables() {
       this.assignments = new MPVariable[this.numStudents][this.numClasses];
       for (final int s : this.allStudents) {
@@ -39,6 +53,9 @@ public class StudentEmploymentAssignment {
       }
    }
 
+   /**
+    * Adds the constraint that each class is assigned to exactly one student.
+    */
    private void addExactlyOneStudentPerClass() {
       for (final int c : this.allClasses) {
          final MPConstraint constraint = this.solver.makeConstraint(0.0, 1.0, "");
@@ -48,6 +65,9 @@ public class StudentEmploymentAssignment {
       }
    }
 
+   /**
+    * Creates the objective function based on student preferences.
+    */
    private void createObjectiveFunction() {
       this.objective = this.solver.objective();
       for (final int s : this.allStudents) {
@@ -58,6 +78,11 @@ public class StudentEmploymentAssignment {
       this.objective.setMaximization();
    }
 
+   /**
+    * Prints the solution to the problem.
+    *
+    * @param resultStatus The result status of the solver.
+    */
    private void printSolution(final MPSolver.ResultStatus resultStatus) {
       if (resultStatus == MPSolver.ResultStatus.OPTIMAL || resultStatus == MPSolver.ResultStatus.FEASIBLE) {
          System.out.printf("Total satisfaction: " + this.objective.value() + "\n\n");
@@ -73,12 +98,14 @@ public class StudentEmploymentAssignment {
                System.out.printf("Student %d was not assigned.\n", s);
             }
          }
-      }
-      else {
+      } else {
          System.err.println("No solution found.");
       }
    }
 
+   /**
+    * Solves the Student Employment Assignment problem.
+    */
    public void solve() {
       this.createSolver();
       this.createVariables();
@@ -88,6 +115,11 @@ public class StudentEmploymentAssignment {
       this.printSolution(resultStatus);
    }
 
+   /**
+    * Main method to run the Student Employment Assignment problem solver.
+    *
+    * @param args Command-line arguments (not used).
+    */
    public static void main(final String[] args) {
       Loader.loadNativeLibraries();
       final int[][] preferences = { { 1, 2 }, { 2, 1 }, { 1, 1 }, { 3, 2 } };
