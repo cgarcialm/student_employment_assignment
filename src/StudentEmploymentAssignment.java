@@ -22,6 +22,7 @@ public class StudentEmploymentAssignment {
     MPVariable[][] assignments;
     MPSolver solver;
     MPObjective objective;
+    MPSolver.ResultStatus resultStatus;
 
     /**
      * Constructor to initialize the StudentEmploymentAssignment instance with
@@ -36,6 +37,15 @@ public class StudentEmploymentAssignment {
         this.classesPreferences = classesPreferences;
         this.allClasses = IntStream.range(0, this.numClasses).toArray();
         this.allStudents = IntStream.range(0, this.numStudents).toArray();
+    }
+
+    /**
+     * Getter of the assignments array
+     *
+     * @return 2D array of assignments for each student, class
+     */
+    public MPVariable[][] getAssignments() {
+        return assignments;
     }
 
     /**
@@ -92,10 +102,8 @@ public class StudentEmploymentAssignment {
 
     /**
      * Prints the solution to the problem.
-     *
-     * @param resultStatus The result status of the solver.
      */
-    private void printSolution(final MPSolver.ResultStatus resultStatus) {
+    public void printSolution() {
         if (resultStatus == MPSolver.ResultStatus.OPTIMAL ||
                 resultStatus == MPSolver.ResultStatus.FEASIBLE) {
             System.out.printf("Total satisfaction: " + this.objective.value()
@@ -120,14 +128,17 @@ public class StudentEmploymentAssignment {
 
     /**
      * Solves the Student Employment Assignment problem.
+     *
+     * @return The result status of the solver.
      */
-    public void solve() {
+    public MPSolver.ResultStatus solve() {
         this.createSolver();
         this.createVariables();
         this.addExactlyOneStudentPerClass();
         this.createObjectiveFunction();
-        final MPSolver.ResultStatus resultStatus = this.solver.solve();
-        this.printSolution(resultStatus);
+        resultStatus = this.solver.solve();
+
+        return resultStatus;
     }
 
     /**
@@ -141,5 +152,6 @@ public class StudentEmploymentAssignment {
         final StudentEmploymentAssignment problem = new
                 StudentEmploymentAssignment(preferences);
         problem.solve();
+        problem.printSolution();
     }
 }
