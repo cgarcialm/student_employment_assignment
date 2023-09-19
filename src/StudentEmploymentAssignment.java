@@ -14,9 +14,9 @@ import com.google.ortools.linearsolver.MPVariable;
  * @version 1.0
  */
 public class StudentEmploymentAssignment {
-    private static final int MAX_HOURS = 20;
-    private static final double REL_WEIGHT_PROF = 0.75;
-    private static final double REL_WEIGHT_STUD = 0.25;
+    private static final int MAX_HOURS_PER_STUDENT = 20;
+    private static final double REL_WEIGHT_PROF_PREFERENCES = 0.75;
+    private static final double REL_WEIGHT_STUD_PREFERENCES = 0.25;
     private final int numStudents;
     private final int[] allStudents;
     private final int numClasses;
@@ -99,7 +99,7 @@ public class StudentEmploymentAssignment {
     private void addMaxHoursPerStudent() {
         for (final int s : this.allStudents) {
             final MPConstraint constraint = this.solver.makeConstraint(
-                    0.0, MAX_HOURS, ""
+                    0.0, MAX_HOURS_PER_STUDENT, ""
             );
             for (final int c : this.allClasses) {
                 constraint.setCoefficient(
@@ -122,11 +122,11 @@ public class StudentEmploymentAssignment {
                         & this.studPreferences[s][c] > 0) {
                     this.objective.setCoefficient(
                             this.assignments[s][c],
-                            this.profPreferences[s][c] * REL_WEIGHT_PROF
+                            this.profPreferences[s][c] * REL_WEIGHT_PROF_PREFERENCES
                     );
                     this.objective.setCoefficient(
                             this.assignments[s][c],
-                            this.studPreferences[s][c] * REL_WEIGHT_STUD
+                            this.studPreferences[s][c] * REL_WEIGHT_STUD_PREFERENCES
                     );
                 }
             }
