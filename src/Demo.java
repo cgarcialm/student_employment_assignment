@@ -21,6 +21,10 @@ public class Demo {
     private static final String HOURS_PER_CLASS_PATH =
             "input/required_class_hours.txt";  // Path to the file containing
                                                // class hours.
+    private static final String REGISTERED_SLOTS_PATH =
+            "input/students_registered_slots.txt";  // Path to the file
+                                                    // containing registered
+                                                    // slots.
 
 
     /**
@@ -84,7 +88,7 @@ public class Demo {
             line = new Scanner(scanner.nextLine());
             line.useDelimiter(",|\\s+"); // Use comma, spaces, or newline as
             // delimiters
-            line.nextInt(); // Skip the first integer (professor ID)
+            line.nextInt(); // Skip the first integer (class ID)
             line.next();
             int hours = line.nextInt();
             hoursList.add(hours);
@@ -101,6 +105,67 @@ public class Demo {
         return hoursPerClass;
     }
 
+    /**
+     * Reads and parses registered slots from a text file and returns them as a 3D integer array.
+     *
+     * @return A 3D integer array representing registered slots where the first dimension corresponds
+     *         to rows, the second dimension corresponds to weekdays, and the third dimension contains
+     *         slot values.
+     * @throws IOException If an I/O error occurs while reading the file.
+     */
+    public static int[][][] getRegisteredSlots() throws IOException {
+        final int NUM_WEEKDAYS = 5;
+        List<List<List<Integer>>> registeredSlotsList = new ArrayList<>();
+
+        Scanner scanner = new Scanner(new File(REGISTERED_SLOTS_PATH));
+        int numRows = 0;
+        while (scanner.hasNextLine()) {
+            String line = scanner.nextLine();
+            String[] parts = line.split(",");
+            int row = Integer.parseInt(parts[0].trim());
+            int col = Integer.parseInt(parts[1].trim());
+            registeredSlotsList.add(new ArrayList<>());
+            List<Integer> slots = new ArrayList<>();
+
+            if (parts.length == 3) {
+
+                if (col >= 0 && col < NUM_WEEKDAYS) {
+                    String[] slotValues = parts[2].split("\\s+");
+
+                    for (String slotValue : slotValues) {
+                        if (slotValue.length() > 0)
+                            slots.add(Integer.parseInt(slotValue.trim()));
+                    }
+
+                }
+            }
+            registeredSlotsList.get(row).add(slots);
+            numRows = row;
+        }
+        numRows++;
+        scanner.close();
+
+        // Convert registeredSlotsList to a 3D array
+        int[][][] registeredSlots = new int[numRows][NUM_WEEKDAYS][];
+
+        for (int row = 0; row < numRows; row++) {
+            List<List<Integer>> rowList = registeredSlotsList.get(row);
+
+            for (int col = 0; col < NUM_WEEKDAYS; col++) {
+                if (!rowList.isEmpty()) {
+                    List<Integer> slotsList = rowList.get(col);
+
+                    registeredSlots[row][col] = new int[slotsList.size()];
+
+                    for (int i = 0; i < slotsList.size(); i++) {
+                        registeredSlots[row][col][i] = slotsList.get(i);
+                    }
+                }
+            }
+        }
+
+        return registeredSlots;
+    }
 
     /**
      * Main method to run the Student Employment Assignment problem solver.
@@ -115,15 +180,8 @@ public class Demo {
                 hoursPerClass.length);
         final int[][] studPreferences = getPreferences(STUD_PREF_PATH,
                 hoursPerClass.length);
+        int[][][] registeredSlotsPerStudentDay = getRegisteredSlots();
 
-        // 0: no slot
-        // 1: afternoon slot
-        // 2: night slot
-        int[][][] registeredSlotsPerStudentDay = {
-                {{}, {}, {}, {}, {}},
-                {{}, {}, {}, {}, {}},
-                {{}, {}, {}, {}, {}}
-        };
         int[][] slotsPerClass = {{0, 1, 0, 0, 0}, {0, 2, 0, 0, 0}};
         final StudentEmploymentAssignment problem = new
                 StudentEmploymentAssignment(
