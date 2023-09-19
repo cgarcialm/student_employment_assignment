@@ -21,6 +21,7 @@ public class StudentEmploymentAssignment {
     private final int numClasses;
     private final int[] allClasses;
     private final int[][] classesPreferences;
+    private final int[] hoursPerClass;
     MPVariable[][] assignments;
     MPSolver solver;
     MPObjective objective;
@@ -32,11 +33,14 @@ public class StudentEmploymentAssignment {
      *
      * @param classesPreferences The 2D array of student preferences for
      *                           classes.
+     * @param hoursPerClass The 1D array of required hours per class.
      */
-    public StudentEmploymentAssignment(final int[][] classesPreferences) {
+    public StudentEmploymentAssignment(final int[][] classesPreferences,
+                                       int[] hoursPerClass) {
         this.numClasses = classesPreferences[0].length;
         this.numStudents = classesPreferences.length;
         this.classesPreferences = classesPreferences;
+        this.hoursPerClass = hoursPerClass;
         this.allClasses = IntStream.range(0, this.numClasses).toArray();
         this.allStudents = IntStream.range(0, this.numStudents).toArray();
     }
@@ -93,7 +97,7 @@ public class StudentEmploymentAssignment {
             );
             for (final int c : this.allClasses) {
                 constraint.setCoefficient(
-                        this.assignments[s][c], HOURS_PER_CLASS
+                        this.assignments[s][c], hoursPerClass[c]
                 );
             }
         }
@@ -165,8 +169,9 @@ public class StudentEmploymentAssignment {
     public static void main(final String[] args) {
         Loader.loadNativeLibraries();
         final int[][] preferences = {{1, 2}, {2, 1}, {1, 1}, {3, 2}};
+        final int[] hoursPerClass = {10, 10, 10};
         final StudentEmploymentAssignment problem = new
-                StudentEmploymentAssignment(preferences);
+                StudentEmploymentAssignment(preferences, hoursPerClass);
         problem.solve();
         problem.printSolution();
     }
