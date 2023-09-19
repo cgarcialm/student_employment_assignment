@@ -5,13 +5,23 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+/**
+ * This class implements a demo for the Student Employment Assignment solver.
+ *
+ * @author cgarcialm
+ * @version 1.0
+ */
 public class Demo {
     private static final String PROF_PREF_PATH =
-            "input/professors_preferences.txt";
+            "input/professors_preferences.txt";  // Path to the file containing
+    // professors' preferences.
     private static final String STUD_PREF_PATH =
-            "input/students_preferences.txt";
+            "input/students_preferences.txt";  // Path to the file containing
+    // students' preferences.
     private static final String HOURS_PER_CLASS_PATH =
-            "input/class_hours.txt";
+            "input/class_hours.txt";  // Path to the file containing class
+    // hours.
+
 
     /**
      * Parses professor/student preferences from a text file and returns them as
