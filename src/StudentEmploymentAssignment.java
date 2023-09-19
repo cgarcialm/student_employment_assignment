@@ -14,20 +14,25 @@ import com.google.ortools.linearsolver.MPVariable;
  * @version 1.0
  */
 public class StudentEmploymentAssignment {
-    private static final int MAX_HOURS_PER_STUDENT = 20;
-    private static final double REL_WEIGHT_PROF_PREFERENCES = 0.75;
-    private static final double REL_WEIGHT_STUD_PREFERENCES = 0.25;
-    private final int numStudents;
-    private final int[] allStudents;
-    private final int numClasses;
-    private final int[] allClasses;
-    private final int[][] profPreferences;
-    private final int[][] studPreferences;
-    private final int[] hoursPerClass;
-    MPVariable[][] assignments;
-    MPSolver solver;
-    MPObjective objective;
-    MPSolver.ResultStatus resultStatus;
+    private static final int MAX_HOURS_PER_STUDENT = 20;  // Maximum hours per
+                                                                    // student.
+    private static final double REL_WEIGHT_PROF_PREFERENCES = 0.75;  // Relative
+                                            // weight for professor preferences.
+    private static final double REL_WEIGHT_STUD_PREFERENCES = 0.25;  // Relative
+                                            // weight for student preferences.
+    private final int numStudents;  // Total number of students.
+    private final int[] allStudents;  // Array containing all student indices.
+    private final int numClasses;  // Total number of classes.
+    private final int[] allClasses;  // Array containing all class indices.
+    private final int[][] profPreferences;  // Professor preferences for
+    // classes.
+    private final int[][] studPreferences;  // Student preferences for classes.
+    private final int[] hoursPerClass;  // Hours per class.
+    MPVariable[][] assignments;  // Matrix of assignment variables.
+    MPSolver solver;  // Solver for the optimization problem.
+    MPObjective objective;  // Objective function for optimization.
+    MPSolver.ResultStatus resultStatus;  // Result status of the optimization.
+
 
     /**
      * Constructor to initialize the StudentEmploymentAssignment instance with
