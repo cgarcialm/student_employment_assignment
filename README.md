@@ -39,12 +39,12 @@ The Student Employment Assignment problem is a combinatorial optimization proble
 
    - After running the solver, you can view the optimized student-class assignments and the corresponding satisfaction scores. The solver will provide information about which students are assigned to which classes.
 
-6. **Contributing:**
+## Contributing:
 
-   - Contributions to this project are welcome. If you have ideas for improvements or would like to report issues, please open a GitHub issue or submit a pull request.
+Contributions to this project are welcome. If you have ideas for improvements or would like to report issues, please open a GitHub issue or submit a pull request.
 
 ## Acknowledgments:
 
-   - This project is based on the OR-Tools library by Google.
+This project is based on the OR-Tools library by Google.
 
 Feel free to explore the code and resources in this repository to learn more about solving the Student Employment Assignment problem using optimization techniques.
