@@ -14,7 +14,7 @@ The Student Employment Assignment problem is a combinatorial optimization proble
 
 - **Optimization Objective:** The objective of the optimization is to maximize overall satisfaction based on preferences.
 
-- **Constraints:** The solver respects constraints such as class capacities, student availability, and professor-student preferences.
+- **Constraints:** The solver respects constraints such as class slots required, student availability, student total hours, and professor-student preferences.
 
 ## Usage
 
