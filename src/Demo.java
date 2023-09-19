@@ -38,27 +38,24 @@ public class Demo {
     public static int[][] getPreferences(String filePath, int nClasses) throws
             IOException {
         List<int[]> preferencesList = new ArrayList<>();
+        Scanner scanner = new Scanner(new File(filePath));
+        Scanner line;
 
-        try (Scanner scanner = new Scanner(new File(filePath))) {
-
-            while (scanner.hasNextLine()) {
-                Scanner line = new Scanner(scanner.nextLine());
-                line.useDelimiter(",|\\s+"); // Use comma, spaces, or newline as
-                // delimiters
-                line.nextInt();
-                line.next();
-                int[] preferencesRow = new int[nClasses];
-                int classNum = 0;
-                while(line.hasNextInt()) {
-                    preferencesRow[classNum] = line.nextInt(); // First
-                    // preference value
-                    classNum++;
-                }
-                preferencesList.add(preferencesRow);
+        while (scanner.hasNextLine()) {
+            line = new Scanner(scanner.nextLine());
+            line.useDelimiter(",|\\s+"); // Use comma, spaces, or newline as
+            // delimiters
+            line.nextInt();
+            line.next();
+            int[] preferencesRow = new int[nClasses];
+            int classNum = 0;
+            while(line.hasNextInt()) {
+                preferencesRow[classNum] = line.nextInt(); // First
+                // preference value
+                classNum++;
             }
-        } catch (IOException e) {
-            // Handle the IOException by rethrowing it
-            throw e;
+            preferencesList.add(preferencesRow);
+            line.close();
         }
 
         // Convert the List to a 2D array
@@ -67,6 +64,7 @@ public class Demo {
             preferences[i] = preferencesList.get(i);
         }
 
+        scanner.close();
         return preferences;
     }
 
@@ -79,21 +77,18 @@ public class Demo {
      */
     public static int[] getHoursPerClass() throws IOException {
         List<Integer> hoursList = new ArrayList<>();
+        Scanner scanner = new Scanner(new File(HOURS_PER_CLASS_PATH));
+        Scanner line;
 
-        try (Scanner scanner = new Scanner(new File(HOURS_PER_CLASS_PATH))) {
-
-            while (scanner.hasNextLine()) {
-                Scanner line = new Scanner(scanner.nextLine());
-                line.useDelimiter(",|\\s+"); // Use comma, spaces, or newline as
-                // delimiters
-                line.nextInt(); // Skip the first integer (professor ID)
-                line.next();
-                int hours = line.nextInt();
-                hoursList.add(hours);
-            }
-        } catch (IOException e) {
-            // Handle the IOException by rethrowing it
-            throw e;
+        while (scanner.hasNextLine()) {
+            line = new Scanner(scanner.nextLine());
+            line.useDelimiter(",|\\s+"); // Use comma, spaces, or newline as
+            // delimiters
+            line.nextInt(); // Skip the first integer (professor ID)
+            line.next();
+            int hours = line.nextInt();
+            hoursList.add(hours);
+            line.close();
         }
 
         // Convert the List to an array
@@ -102,6 +97,7 @@ public class Demo {
             hoursPerClass[i] = hoursList.get(i);
         }
 
+        scanner.close();
         return hoursPerClass;
     }
 
