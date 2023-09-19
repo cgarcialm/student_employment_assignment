@@ -27,7 +27,9 @@ class StudentEmploymentAssignmentTest {
      */
     private int[][] getSolverAssignments(
             int[][] profPreferences, int[][] studPreferences,
-            int[] hoursPerClass
+            int[] hoursPerClass,
+            int[][][] registeredSlotsPerStudentDay,
+            int[][] slotsPerClass
     ) {
         // Load native libraries for OR-Tools.
         Loader.loadNativeLibraries();
@@ -35,8 +37,11 @@ class StudentEmploymentAssignmentTest {
         // Create an instance of the StudentEmploymentAssignment class with the
         // specified preferences.
         StudentEmploymentAssignment problem = new
-                StudentEmploymentAssignment(profPreferences, studPreferences,
-                hoursPerClass);
+                StudentEmploymentAssignment(
+                    profPreferences, studPreferences,
+                    hoursPerClass,
+                    registeredSlotsPerStudentDay, slotsPerClass
+        );
 
         // Solve the problem to obtain the student-class assignments.
         problem.solve();
@@ -75,19 +80,34 @@ class StudentEmploymentAssignmentTest {
                         new int[][] {{1, 2}, {2, 1}, {3, 2}},
                         new int[][] {{1, 2}, {2, 1}, {3, 2}},
                         new int[] {10, 10},
+                        new int[][][] {
+                                {{}, {}, {}, {}, {}},
+                                {{}, {}, {}, {}, {}},
+                                {{}, {}, {}, {}, {}}
+                        },
+                        new int[][] {{0, 1, 0, 0, 0}, {0, 2, 0, 0, 0}},
                         new int[][] {{0, 1}, {0, 0}, {1, 0}}),
                 Arguments.of( // Max hours test
-                        new int[][] {{2, 2, 2}, {1, 1, 1}, {1, 1, 1},
-                                {1, 1, 1}},
-                        new int[][] {{2, 2, 2}, {1, 1, 1}, {1, 1, 1},
-                                {1, 1, 1}},
-                        new int[] {10, 10, 10},
-                        new int[][] {{1, 1, 0}, {0, 0, 1}, {0, 0, 0},
-                                {0, 0, 0}}),
+                        new int[][] {{3, 3}, {2, 1}, {2, 2}},
+                        new int[][] {{1, 2}, {2, 1}, {3, 2}},
+                        new int[] {15, 15},
+                        new int[][][] {
+                                {{}, {}, {}, {}, {}},
+                                {{}, {}, {}, {}, {}},
+                                {{}, {}, {}, {}, {}}
+                        },
+                        new int[][] {{0, 1, 0, 0, 0}, {0, 2, 0, 0, 0}},
+                        new int[][] {{0, 1}, {0, 0}, {1, 0}}),
                 Arguments.of( // Different preferences test
-                        new int[][] {{2, 2}, {2, 2}, {1, 1}},
-                        new int[][] {{0, 0}, {0, 1}, {2, 1}},
-                        new int[] {10, 10},
+                        new int[][] {{0, 0}, {2, 1}, {2, 2}},
+                        new int[][] {{1, 2}, {2, 1}, {3, 2}},
+                        new int[] {15, 15},
+                        new int[][][] {
+                                {{}, {}, {}, {}, {}},
+                                {{}, {}, {}, {}, {}},
+                                {{}, {}, {}, {}, {}}
+                        },
+                        new int[][] {{0, 1, 0, 0, 0}, {0, 2, 0, 0, 0}},
                         new int[][] {{0, 0}, {0, 1}, {1, 0}})
         );
     }
@@ -106,10 +126,15 @@ class StudentEmploymentAssignmentTest {
     @ParameterizedTest
     @MethodSource("providesPreferencesForTestSolve")
     public void testSolveCase(int[][] profPreferences, int[][] studPreferences,
-                              int[] hoursPerClass, int[][] expected) {
+                              int[] hoursPerClass,
+                              int[][][] registeredSlotsPerStudentDay,
+                              int[][] slotsPerClass,
+                              int[][] expected) {
         // Get assignments from the solver based on the provided preferences.
         int[][] assignments = getSolverAssignments(
-                profPreferences, studPreferences, hoursPerClass
+                profPreferences, studPreferences,
+                hoursPerClass,
+                registeredSlotsPerStudentDay, slotsPerClass
         );
 
         // Verify that the obtained assignments match the expected assignments.

@@ -1,5 +1,6 @@
 import com.google.ortools.linearsolver.MPConstraint;
 
+import java.util.Arrays;
 import java.util.stream.IntStream;
 
 import com.google.ortools.linearsolver.MPObjective;
@@ -27,33 +28,47 @@ public class StudentEmploymentAssignment {
     // classes.
     private final int[][] studPreferences;  // Student preferences for classes.
     private final int[] hoursPerClass;  // Hours per class.
+
+    int[][][] registeredSlotsPerStudentDay; // Registered slots for each
+                                            // student on each day
+    int[][] slotsPerClass; // Assigned slots for each class
     MPVariable[][] assignments;  // Matrix of assignment variables.
     MPSolver solver;  // Solver for the optimization problem.
     MPObjective objective;  // Objective function for optimization.
     MPSolver.ResultStatus resultStatus;  // Result status of the optimization.
 
-
     /**
      * Constructor to initialize the StudentEmploymentAssignment instance with
-     * class preferences.
+     * class preferences and scheduling constraints.
      *
-     * @param profPreferences The 2D array of professors' preferences for
-     *                        each student for each class.
+     * @param profPreferences The 2D array of professors' preferences for each
+     *                        student for each class.
      * @param studPreferences The 2D array of students' preferences for each
      *                        class.
      * @param hoursPerClass The 1D array of required hours per class.
+     * @param registeredSlotsPerStudentDay The 3D array representing registered
+     *                                     slots for each student on each day.
+     * @param slotsPerClass The 2D array representing assigned slots for each
+     *                      class.
      */
-    public StudentEmploymentAssignment(int[][] profPreferences,
-                                       int[][] studPreferences,
-                                       int[] hoursPerClass) {
+    public StudentEmploymentAssignment(
+            int[][] profPreferences,
+            int[][] studPreferences,
+            int[] hoursPerClass,
+            int[][][] registeredSlotsPerStudentDay,
+            int[][] slotsPerClass
+    ) {
         this.numClasses = profPreferences[0].length;
         this.numStudents = profPreferences.length;
         this.profPreferences = profPreferences;
         this.studPreferences = studPreferences;
         this.hoursPerClass = hoursPerClass;
+        this.registeredSlotsPerStudentDay = registeredSlotsPerStudentDay;
+        this.slotsPerClass = slotsPerClass;
         this.allClasses = IntStream.range(0, this.numClasses).toArray();
         this.allStudents = IntStream.range(0, this.numStudents).toArray();
     }
+
 
     /**
      * Getter of the assignments array
@@ -100,6 +115,10 @@ public class StudentEmploymentAssignment {
         }
     }
 
+    /**
+     * Adds the constraint that each student does not work more than 20 hours
+     * per week.
+     */
     private void addMaxHoursPerStudent() {
         for (final int s : this.allStudents) {
             final MPConstraint constraint = this.solver.makeConstraint(
@@ -112,6 +131,52 @@ public class StudentEmploymentAssignment {
             }
         }
     }
+    /**
+     * Checks if a professor wants a specific student for a class.
+     *
+     * @param s The student index.
+     * @param c The class index.
+     * @return true if the professor wants the student for the class, false otherwise.
+     */
+    private boolean profWantsStudent(int s, int c) {
+        return this.profPreferences[s][c] > 0;
+    }
+
+    /**
+     * Checks if a student wants a specific class.
+     *
+     * @param s The student index.
+     * @param c The class index.
+     * @return true if the student wants the class, false otherwise.
+     */
+    private boolean studWantsClass(int s, int c) {
+        return this.studPreferences[s][c] > 0;
+    }
+
+    /**
+     * Checks if a student's slot is available for a class on every day the
+     * class has slots assigned.
+     *
+     * @param s The student index.
+     * @param c The class index.
+     * @return true if the slots are available, false if student's already
+     * registered.
+     */
+    private boolean isStudentSlotFree(int s, int c) {
+        final int NUM_WEEKDAYS = 5;
+        int[][] studentRegisteredSlots = registeredSlotsPerStudentDay[s];
+        int[] classSlots = slotsPerClass[c];
+        for (int d = 0; d < NUM_WEEKDAYS; d++) {
+            if (classSlots[d] > 0) {
+                if (Arrays.asList(studentRegisteredSlots[d]).contains(
+                        classSlots[d])
+                ) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
 
     /**
      * Creates the objective function based on student preferences.
@@ -120,17 +185,22 @@ public class StudentEmploymentAssignment {
         this.objective = this.solver.objective();
         for (final int s : this.allStudents) {
             for (final int c : this.allClasses) {
-                // If student is interested in the class and professor
-                // interested in student
-                if (this.profPreferences[s][c] > 0
-                        & this.studPreferences[s][c] > 0) {
+                // If student is interested in the class
+                boolean profWants = profWantsStudent(s, c);
+                // If professor is interested in the student for this class
+                boolean studWants = studWantsClass(s, c);
+                // If student is free for class's assigned slots
+                boolean studIsFree = isStudentSlotFree(s, c);
+                if (profWants & studWants & studIsFree) {
                     this.objective.setCoefficient(
                             this.assignments[s][c],
-                            this.profPreferences[s][c] * REL_WEIGHT_PROF_PREFERENCES
+                            this.profPreferences[s][c]
+                                    * REL_WEIGHT_PROF_PREFERENCES
                     );
                     this.objective.setCoefficient(
                             this.assignments[s][c],
-                            this.studPreferences[s][c] * REL_WEIGHT_STUD_PREFERENCES
+                            this.studPreferences[s][c]
+                                    * REL_WEIGHT_STUD_PREFERENCES
                     );
                 }
             }

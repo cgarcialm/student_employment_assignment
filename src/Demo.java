@@ -19,7 +19,8 @@ public class Demo {
             "input/students_preferences.txt";  // Path to the file containing
     // students' preferences.
     private static final String HOURS_PER_CLASS_PATH =
-            "input/class_hours.txt";  // Path to the file containing class
+            "input/required_class_hours.txt";  // Path to the file containing
+    // class
     // hours.
 
 
@@ -45,6 +46,8 @@ public class Demo {
                 Scanner line = new Scanner(scanner.nextLine());
                 line.useDelimiter(",|\\s+"); // Use comma, spaces, or newline as
                 // delimiters
+                line.nextInt();
+                line.next();
                 int[] preferencesRow = new int[nClasses];
                 int classNum = 0;
                 while(line.hasNextInt()) {
@@ -117,9 +120,22 @@ public class Demo {
                 hoursPerClass.length);
         final int[][] studPreferences = getPreferences(STUD_PREF_PATH,
                 hoursPerClass.length);
+
+        // 0: no slot
+        // 1: afternoon slot
+        // 2: night slot
+        int[][][] registeredSlotsPerStudentDay = {
+                {{}, {}, {}, {}, {}},
+                {{}, {}, {}, {}, {}},
+                {{}, {}, {}, {}, {}}
+        };
+        int[][] slotsPerClass = {{0, 1, 0, 0, 0}, {0, 2, 0, 0, 0}};
         final StudentEmploymentAssignment problem = new
-                StudentEmploymentAssignment(profPreferences, studPreferences,
-                hoursPerClass);
+                StudentEmploymentAssignment(
+                        profPreferences, studPreferences,
+                        hoursPerClass,
+                        registeredSlotsPerStudentDay, slotsPerClass
+        );
         problem.solve();
         problem.printSolution();
     }
