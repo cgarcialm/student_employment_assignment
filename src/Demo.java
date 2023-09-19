@@ -21,6 +21,8 @@ public class Demo {
     private static final String HOURS_PER_CLASS_PATH =
             "input/required_class_hours.txt";  // Path to the file containing
                                                // class hours.
+   private static final String CLASS_SLOTS_PATH =
+           "input/class_slots.txt";  // Path to the file containing class
     private static final String REGISTERED_SLOTS_PATH =
             "input/students_registered_slots.txt";  // Path to the file
                                                     // containing registered
@@ -106,6 +108,44 @@ public class Demo {
     }
 
     /**
+     * Parses classes' slots from a text file and returns them as a 2D array of
+     * integers arrays.
+     *
+     * @return A 2D array of integers representing the slot in each weekday for
+     * each class.
+     * @throws IOException If an I/O error occurs while reading the file.
+     */
+    public static int[][] getSlotsPerClass() throws IOException {
+        final int NUM_WEEKDAYS = 5;
+        List<int[]> slotsPerClass = new ArrayList<>();
+        Scanner scanner = new Scanner(new File(CLASS_SLOTS_PATH));
+        Scanner line;
+
+        while (scanner.hasNextLine()) {
+            line = new Scanner(scanner.nextLine());
+            line.useDelimiter(",|\\s+"); // Use comma, spaces, or newline as
+            // delimiters
+            line.nextInt(); // Skip the first integer (class ID)
+            line.next();
+            int[] slots = new int[NUM_WEEKDAYS];
+            for (int d = 0; d < NUM_WEEKDAYS; d++) {
+                slots[d] = line.nextInt();
+            }
+            slotsPerClass.add(slots);
+            line.close();
+        }
+
+        // Convert the List to an array
+        int[][] hoursPerClass = new int[slotsPerClass.size()][NUM_WEEKDAYS];
+        for (int i = 0; i < slotsPerClass.size(); i++) {
+            hoursPerClass[i] = slotsPerClass.get(i);
+        }
+
+        scanner.close();
+        return hoursPerClass;
+    }
+
+    /**
      * Reads and parses registered slots from a text file and returns them as a 3D integer array.
      *
      * @return A 3D integer array representing registered slots where the first dimension corresponds
@@ -181,8 +221,8 @@ public class Demo {
         final int[][] studPreferences = getPreferences(STUD_PREF_PATH,
                 hoursPerClass.length);
         int[][][] registeredSlotsPerStudentDay = getRegisteredSlots();
+        int[][] slotsPerClass = getSlotsPerClass();
 
-        int[][] slotsPerClass = {{0, 1, 0, 0, 0}, {0, 2, 0, 0, 0}};
         final StudentEmploymentAssignment problem = new
                 StudentEmploymentAssignment(
                         profPreferences, studPreferences,
