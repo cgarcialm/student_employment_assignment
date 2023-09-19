@@ -15,12 +15,14 @@ import com.google.ortools.linearsolver.MPVariable;
  */
 public class StudentEmploymentAssignment {
     private static final int MAX_HOURS = 20;
-    private static final int HOURS_PER_CLASS = 10;
+    private static final double REL_WEIGHT_PROF = 0.75;
+    private static final double REL_WEIGHT_STUD = 0.25;
     private final int numStudents;
     private final int[] allStudents;
     private final int numClasses;
     private final int[] allClasses;
-    private final int[][] classesPreferences;
+    private final int[][] profPreferences;
+    private final int[][] studPreferences;
     private final int[] hoursPerClass;
     MPVariable[][] assignments;
     MPSolver solver;
@@ -31,15 +33,19 @@ public class StudentEmploymentAssignment {
      * Constructor to initialize the StudentEmploymentAssignment instance with
      * class preferences.
      *
-     * @param classesPreferences The 2D array of student preferences for
-     *                           classes.
+     * @param profPreferences The 2D array of professors' preferences for
+     *                        each student for each class.
+     * @param studPreferences The 2D array of students' preferences for each
+     *                        class.
      * @param hoursPerClass The 1D array of required hours per class.
      */
-    public StudentEmploymentAssignment(final int[][] classesPreferences,
+    public StudentEmploymentAssignment(int[][] profPreferences,
+                                       int[][] studPreferences,
                                        int[] hoursPerClass) {
-        this.numClasses = classesPreferences[0].length;
-        this.numStudents = classesPreferences.length;
-        this.classesPreferences = classesPreferences;
+        this.numClasses = profPreferences[0].length;
+        this.numStudents = profPreferences.length;
+        this.profPreferences = profPreferences;
+        this.studPreferences = studPreferences;
         this.hoursPerClass = hoursPerClass;
         this.allClasses = IntStream.range(0, this.numClasses).toArray();
         this.allStudents = IntStream.range(0, this.numStudents).toArray();
@@ -110,10 +116,19 @@ public class StudentEmploymentAssignment {
         this.objective = this.solver.objective();
         for (final int s : this.allStudents) {
             for (final int c : this.allClasses) {
-                this.objective.setCoefficient(
-                        this.assignments[s][c],
-                        this.classesPreferences[s][c]
-                );
+                // If student is interested in the class and professor
+                // interested in student
+                if (this.profPreferences[s][c] > 0
+                        & this.studPreferences[s][c] > 0) {
+                    this.objective.setCoefficient(
+                            this.assignments[s][c],
+                            this.profPreferences[s][c] * REL_WEIGHT_PROF
+                    );
+                    this.objective.setCoefficient(
+                            this.assignments[s][c],
+                            this.studPreferences[s][c] * REL_WEIGHT_STUD
+                    );
+                }
             }
         }
         this.objective.setMaximization();
@@ -168,10 +183,12 @@ public class StudentEmploymentAssignment {
      */
     public static void main(final String[] args) {
         Loader.loadNativeLibraries();
-        final int[][] preferences = {{1, 2}, {2, 1}, {1, 1}, {3, 2}};
+        final int[][] profPreferences = {{1, 2}, {2, 1}, {1, 1}, {3, 2}};
+        final int[][] studPreferences = {{1, 2}, {2, 1}, {1, 1}, {3, 2}};
         final int[] hoursPerClass = {10, 10, 10};
         final StudentEmploymentAssignment problem = new
-                StudentEmploymentAssignment(preferences, hoursPerClass);
+                StudentEmploymentAssignment(profPreferences, studPreferences,
+                hoursPerClass);
         problem.solve();
         problem.printSolution();
     }
