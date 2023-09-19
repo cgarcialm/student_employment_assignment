@@ -146,11 +146,12 @@ public class Demo {
     }
 
     /**
-     * Reads and parses registered slots from a text file and returns them as a 3D integer array.
+     * Reads and parses registered slots from a text file and returns them as a
+     * 3D integer array.
      *
-     * @return A 3D integer array representing registered slots where the first dimension corresponds
-     *         to rows, the second dimension corresponds to weekdays, and the third dimension contains
-     *         slot values.
+     * @return A 3D integer array representing registered slots where the first
+     * dimension corresponds to rows, the second dimension corresponds to
+     * weekdays, and the third dimension contains slot values.
      * @throws IOException If an I/O error occurs while reading the file.
      */
     public static int[][][] getRegisteredSlots() throws IOException {
