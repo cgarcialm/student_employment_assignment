@@ -153,6 +153,13 @@ public class StudentEmploymentAssignment {
         return this.studPreferences[s][c] > 0;
     }
 
+    private boolean intArrayContains(int[] arr, int value) {
+        for (int c : arr)
+            if (c == value)
+                return true;
+        return false;
+    }
+
     /**
      * Checks if a student's slot is available for a class on every day the
      * class has slots assigned.
@@ -168,13 +175,10 @@ public class StudentEmploymentAssignment {
         int[] classSlots = slotsPerClass[c];
         for (int d = 0; d < NUM_WEEKDAYS; d++) {
             if (classSlots[d] > 0) {
-                if (Arrays.asList(studentRegisteredSlots[d]).contains(
-                        classSlots[d])
-                ) {
+                if (intArrayContains(studentRegisteredSlots[d], classSlots[d]))
                     return false;
                 }
             }
-        }
         return true;
     }
 

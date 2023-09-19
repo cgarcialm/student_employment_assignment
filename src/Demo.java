@@ -14,14 +14,13 @@ import java.util.Scanner;
 public class Demo {
     private static final String PROF_PREF_PATH =
             "input/professors_preferences.txt";  // Path to the file containing
-    // professors' preferences.
+                                                 // professors' preferences.
     private static final String STUD_PREF_PATH =
             "input/students_preferences.txt";  // Path to the file containing
-    // students' preferences.
+                                               // students' preferences.
     private static final String HOURS_PER_CLASS_PATH =
             "input/required_class_hours.txt";  // Path to the file containing
-    // class
-    // hours.
+                                               // class hours.
 
 
     /**
