@@ -64,8 +64,14 @@ class StudentEmploymentAssignmentTest {
      */
     private static Stream<Arguments> providesPreferencesForTestSolve() {
         return Stream.of(
-                Arguments.of(new int[][] {{1, 2}, {2, 1}, {1, 1}, {3, 2}},
-                        new int[][] {{0, 1}, {0, 0}, {0, 0}, {1, 0}})
+                Arguments.of( // Random input test
+                        new int[][] {{1, 2}, {2, 1}, {1, 1}, {3, 2}},
+                        new int[][] {{0, 1}, {0, 0}, {0, 0}, {1, 0}}),
+                Arguments.of( // Max hours test
+                        new int[][] {{2, 2, 2}, {1, 1, 1}, {1, 1, 1},
+                                {1, 1, 1}},
+                        new int[][] {{1, 1, 0}, {0, 0, 1}, {0, 0, 0},
+                                {0, 0, 0}})
         );
     }
 

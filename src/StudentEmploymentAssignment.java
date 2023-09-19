@@ -14,6 +14,8 @@ import com.google.ortools.linearsolver.MPVariable;
  * @version 1.0
  */
 public class StudentEmploymentAssignment {
+    private static final int MAX_HOURS = 20;
+    private static final int HOURS_PER_CLASS = 10;
     private final int numStudents;
     private final int[] allStudents;
     private final int numClasses;
@@ -84,6 +86,19 @@ public class StudentEmploymentAssignment {
         }
     }
 
+    private void addMaxHoursPerStudent() {
+        for (final int s : this.allStudents) {
+            final MPConstraint constraint = this.solver.makeConstraint(
+                    0.0, MAX_HOURS, ""
+            );
+            for (final int c : this.allClasses) {
+                constraint.setCoefficient(
+                        this.assignments[s][c], HOURS_PER_CLASS
+                );
+            }
+        }
+    }
+
     /**
      * Creates the objective function based on student preferences.
      */
@@ -135,6 +150,7 @@ public class StudentEmploymentAssignment {
         this.createSolver();
         this.createVariables();
         this.addExactlyOneStudentPerClass();
+        this.addMaxHoursPerStudent();
         this.createObjectiveFunction();
         resultStatus = this.solver.solve();
 
