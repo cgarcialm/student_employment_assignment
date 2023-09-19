@@ -22,7 +22,7 @@ public class Demo {
             "input/required_class_hours.txt";  // Path to the file containing
                                                // class hours.
    private static final String CLASS_SLOTS_PATH =
-           "input/class_slots.txt";  // Path to the file containing class
+           "input/class_slots.txt";  // Path to the file containing class slots.
     private static final String REGISTERED_SLOTS_PATH =
             "input/students_registered_slots.txt";  // Path to the file
                                                     // containing registered
