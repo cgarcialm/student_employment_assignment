@@ -1,5 +1,7 @@
 # Student Employment Assignment Optimization
 
+**Author:** Cecilia Garcia Lopez de Munain
+
 This repository contains code and resources for solving the Student Employment Assignment problem using optimization techniques.
 
 ## Problem Description
@@ -48,3 +50,70 @@ Contributions to this project are welcome. If you have ideas for improvements or
 This project is based on the OR-Tools library by Google.
 
 Feel free to explore the code and resources in this repository to learn more about solving the Student Employment Assignment problem using optimization techniques.
+
+## Optimization Model
+
+### Variables
+Let's define the decision variables for our optimization model:
+
+$$x_{ij} =
+\begin{cases}
+1 & \text{if student } i \text{ is assigned to class } j \\
+0 & \text{otherwise}
+\end{cases}$$
+
+Where:
+- $i \in$ Set of students
+- $j \in$ Set of classes
+
+### Objective Function
+The objective is to maximize the overall satisfaction based on professor and student preferences, with each term weighted by a relative weight. We can formulate the objective function as follows:
+
+Maximize: $$\sum_{i} \sum_{j} (\alpha \cdot \text{studentPreference}(i, j) + \beta \cdot \text{professorPreference}(i, j)) \cdot x_{ij}$$
+
+Where:
+- $α$ = Relative weight for student preferences
+- $β$ = Relative weight for professor preferences
+- $studentPreference(i, j)$ = Preference value of student $i$ for class $j$
+- $professorPreference(i, j)$ = Preference value of professor for student $i$ in class $j$
+
+Assignment variables $x_{ij}$ are created only when the student's busy slots do not contain the required slots for the class. Specifically, $x_{ij}$ is created and can be equal to 1 if and only if:
+
+- $classSlot(j, d) \neq 0$ and $classSlot(j, d) \notin studentSlot(i, d)$
+
+Where:
+- $classSlot(j, d)$ represents the slot required by class $j$ on weekday $d$ (0 if none, 1 if afternoon, 2 if night).
+- $studentSlot(i, d)$ represents the array of busy slots for student $i$ on weekday $d$ (empty if no slots are busy, contains 1 and/or 2 if those slots are busy).
+
+This constraint ensures that assignment variables are created only when the student's busy slots do not contain the required slots for the class on the specified days.
+
+### Constraints
+We must satisfy the following constraints:
+
+#### 1. At Most One Student per Class:
+
+$$\sum_{i} x_{ij} \leq 1, \forall j$$
+
+#### 2. Limiting Weekly Assignment Hours for Each Student:
+For each student $i$, let:
+
+$hoursPerClass(j) = \text{Required hours for class } j \quad \forall j \in \text{Set of classes}$
+
+The following constraint ensures that the total weekly assignment hours for each student do not exceed 20:
+
+$$\sum_{j} hoursPerClass(j) \cdot x_{ij} \leq 20, \forall i$$
+
+Where:
+- $x_{ij}$ is the binary decision variable that indicates whether student $i$ is assigned to class $j$.
+- $hoursPerClass(j)$ represents the required hours for class $j$.
+
+This constraint ensures that each student's total weekly assignment hours, considering the required hours for each class they are assigned to, is limited to 20 or less.
+
+## Solving the Student Employment Assignment Problem
+
+The Student Employment Assignment problem can be modeled as a Mixed-Integer Programming (MIP) problem. In a MIP problem, we have both binary (0-1) and continuous variables, and the objective is to find an optimal solution that maximizes or minimizes a given objective function while satisfying a set of constraints.
+
+The optimization problem can be solved using various optimization solvers such as OR-Tools, CPLEX, or Gurobi.
+
+## Conclusion
+The Student Employment Assignment problem is a complex optimization problem that aims to maximize overall satisfaction while adhering to various constraints. By formulating the problem as a mathematical optimization model, we can use optimization solvers to find an optimal solution.
