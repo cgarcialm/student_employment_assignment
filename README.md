@@ -2,7 +2,23 @@
 
 **Author:** Cecilia Garcia Lopez de Munain
 
-This repository contains code and resources for solving the Student Employment Assignment problem using optimization techniques.
+This repository contains code and resources for solving the Student Employment Assignment problem using optimization techniques, as well as the optimization problem formulation.
+
+[Problem Description](https://github.com/cgarcialm/student_employment_assignment/#problem-description)
+
+[Features](https://github.com/cgarcialm/student_employment_assignment/#features)
+
+[Usage](https://github.com/cgarcialm/student_employment_assignment/#usage)
+
+[Contributing](https://github.com/cgarcialm/student_employment_assignment/#contributing)
+
+[Solving the Student Employment Assignment Problem](https://github.com/cgarcialm/student_employment_assignment/#solving-the-student-employment-assignment-problem)
+
+[Optimization Model](https://github.com/cgarcialm/student_employment_assignment/#optimization-model)
+
+[Conclusion](https://github.com/cgarcialm/student_employment_assignment/#conclusion)
+
+[Acknowledgments](https://github.com/cgarcialm/student_employment_assignment/#acknowledgments)
 
 ## Problem Description
 
@@ -45,12 +61,11 @@ The Student Employment Assignment problem is a combinatorial optimization proble
 
 Contributions to this project are welcome. If you have ideas for improvements or would like to report issues, please open a GitHub issue or submit a pull request.
 
-## Acknowledgments:
+## Solving the Student Employment Assignment Problem
 
-This project is based on the OR-Tools library by Google.
+The Student Employment Assignment problem can be modeled as a Mixed-Integer Programming (MIP) problem. In a MIP problem, we have both binary (0-1) and continuous variables, and the objective is to find an optimal solution that maximizes or minimizes a given objective function while satisfying a set of constraints.
 
-Feel free to explore the code and resources in this repository to learn more about solving the Student Employment Assignment problem using optimization techniques.
-
+The optimization problem can be solved using various optimization solvers such as OR-Tools, CPLEX, or Gurobi.
 ## Optimization Model
 
 ### Variables
@@ -109,11 +124,11 @@ Where:
 
 This constraint ensures that each student's total weekly assignment hours, considering the required hours for each class they are assigned to, is limited to 20 or less.
 
-## Solving the Student Employment Assignment Problem
-
-The Student Employment Assignment problem can be modeled as a Mixed-Integer Programming (MIP) problem. In a MIP problem, we have both binary (0-1) and continuous variables, and the objective is to find an optimal solution that maximizes or minimizes a given objective function while satisfying a set of constraints.
-
-The optimization problem can be solved using various optimization solvers such as OR-Tools, CPLEX, or Gurobi.
-
 ## Conclusion
 The Student Employment Assignment problem is a complex optimization problem that aims to maximize overall satisfaction while adhering to various constraints. By formulating the problem as a mathematical optimization model, we can use optimization solvers to find an optimal solution.
+
+## Acknowledgments:
+
+This project is based on the OR-Tools library by Google.
+
+Feel free to explore the code and resources in this repository to learn more about solving the Student Employment Assignment problem using optimization techniques.
