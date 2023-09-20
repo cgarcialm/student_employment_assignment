@@ -55,7 +55,7 @@ The Student Employment Assignment problem is a combinatorial optimization proble
 
    - After running the solver, you can view the optimized student-class assignments and the corresponding satisfaction scores. The solver will provide information about which students are assigned to which classes.
 
-## Contributing:
+## Contributing
 
 Contributions to this project are welcome. If you have ideas for improvements or would like to report issues, please open a GitHub issue or submit a pull request.
 
@@ -122,7 +122,7 @@ Where:
 
 This constraint ensures that each student's total weekly assignment hours, considering the required hours for each class they are assigned to, is limited to 20 or less.
 
-## Acknowledgments:
+## Acknowledgments
 
 This project is based on the OR-Tools library by Google.
 
