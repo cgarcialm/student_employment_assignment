@@ -16,8 +16,6 @@ This repository contains code and resources for solving the Student Employment A
 
 [Optimization Model](https://github.com/cgarcialm/student_employment_assignment/#optimization-model)
 
-[Conclusion](https://github.com/cgarcialm/student_employment_assignment/#conclusion)
-
 [Acknowledgments](https://github.com/cgarcialm/student_employment_assignment/#acknowledgments)
 
 ## Problem Description
@@ -123,9 +121,6 @@ Where:
 - $hoursPerClass(j)$ represents the required hours for class $j$.
 
 This constraint ensures that each student's total weekly assignment hours, considering the required hours for each class they are assigned to, is limited to 20 or less.
-
-## Conclusion
-The Student Employment Assignment problem is a complex optimization problem that aims to maximize overall satisfaction while adhering to various constraints. By formulating the problem as a mathematical optimization model, we can use optimization solvers to find an optimal solution.
 
 ## Acknowledgments:
 
