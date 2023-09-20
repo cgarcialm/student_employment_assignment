@@ -78,6 +78,7 @@ $$x_{ij} =
 Where:
 - $i \in$ Set of students
 - $j \in$ Set of classes
+- $x_{ij}$ is the binary decision variable that indicates whether student $i$ is assigned to class $j$.
 
 ### Objective Function
 The objective is to maximize the overall satisfaction based on professor and student preferences, with each term weighted by a relative weight. We can formulate the objective function as follows:
@@ -107,6 +108,8 @@ We must satisfy the following constraints:
 
 $$\sum_{i} x_{ij} \leq 1, \forall j$$
 
+This constraint ensures that each class is assigned at most one student, preventing overassignment.
+
 #### 2. Limiting Weekly Assignment Hours for Each Student:
 For each student $i$, let:
 
@@ -117,7 +120,6 @@ The following constraint ensures that the total weekly assignment hours for each
 $$\sum_{j} hoursPerClass(j) \cdot x_{ij} \leq 20, \forall i$$
 
 Where:
-- $x_{ij}$ is the binary decision variable that indicates whether student $i$ is assigned to class $j$.
 - $hoursPerClass(j)$ represents the required hours for class $j$.
 
 This constraint ensures that each student's total weekly assignment hours, considering the required hours for each class they are assigned to, is limited to 20 or less.
