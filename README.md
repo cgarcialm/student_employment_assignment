@@ -92,7 +92,7 @@ Where:
 
 Assignment variables $x_{ij}$ are created only when the student's busy slots do not contain the required slots for the class. Specifically, $x_{ij}$ is created and can be equal to 1 if and only if:
 
-- $classSlot(j, d) \neq 0$ and $classSlot(j, d) \notin studentSlot(i, d)$
+- $classSlot(j, d) \neq 0$ and studentSlot(i, d)$ \notin $classSlot(j, d) 
 
 Where:
 - $classSlot(j, d)$ represents the slot required by class $j$ on weekday $d$ (0 if none, 1 if afternoon, 2 if night).
