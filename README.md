@@ -61,7 +61,7 @@ Contributions to this project are welcome. If you have ideas for improvements or
 
 ## Solving the Student Employment Assignment Problem
 
-The Student Employment Assignment problem can be modeled as a Mixed-Integer Programming (MIP) problem. In a MIP problem, we have both binary (0-1) and continuous variables, and the objective is to find an optimal solution that maximizes or minimizes a given objective function while satisfying a set of constraints.
+The Student Employment Assignment problem can be modeled as a Mixed-Integer Programming (MIP) problem. In a MIP problem, we have both integer and continuous variables, and the objective is to find an optimal solution that maximizes or minimizes a given objective function while satisfying a set of constraints.
 
 The optimization problem can be solved using various optimization solvers such as OR-Tools, CPLEX, or Gurobi.
 ## Optimization Model
