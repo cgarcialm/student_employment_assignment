@@ -78,7 +78,16 @@ $$x_{ij} =
 Where:
 - $i \in$ Set of students
 - $j \in$ Set of classes
-- $x_{ij}$ is the binary decision variable that indicates whether student $i$ is assigned to class $j$.
+
+Assignment variables $x_{ij}$ are created only when the student's busy slots do not contain the required slots for the class. Specifically, $x_{ij}$ is created if and only if:
+
+- $classSlot(j, d) \neq 0$ and $classSlot(j, d) \notin studentSlot(i, d)$ 
+
+Where:
+- $classSlot(j, d)$ represents the slot required by class $j$ on weekday $d$ (0 if none, 1 if afternoon, 2 if night).
+- $studentSlot(i, d)$ represents the array of busy slots for student $i$ on weekday $d$ (empty if no slots are busy, contains 1 and/or 2 if those slots are busy).
+
+This constraint ensures that assignment variables are created only when the student's busy slots do not contain the required slots for the class on the specified days.
 
 ### Objective Function
 The objective is to maximize the overall satisfaction based on professor and student preferences, with each term weighted by a relative weight. We can formulate the objective function as follows:
@@ -91,16 +100,6 @@ Where:
 - $studentPreference(i, j)$ = Preference value of student $i$ for class $j$
 - $professorPreference(i, j)$ = Preference value of professor for student $i$ in class $j$
 
-Assignment variables $x_{ij}$ are created only when the student's busy slots do not contain the required slots for the class. Specifically, $x_{ij}$ is created and can be equal to 1 if and only if:
-
-- $classSlot(j, d) \neq 0$ and $classSlot(j, d) \notin studentSlot(i, d)$ 
-
-Where:
-- $classSlot(j, d)$ represents the slot required by class $j$ on weekday $d$ (0 if none, 1 if afternoon, 2 if night).
-- $studentSlot(i, d)$ represents the array of busy slots for student $i$ on weekday $d$ (empty if no slots are busy, contains 1 and/or 2 if those slots are busy).
-
-This constraint ensures that assignment variables are created only when the student's busy slots do not contain the required slots for the class on the specified days.
-
 ### Constraints
 We must satisfy the following constraints:
 
@@ -112,10 +111,6 @@ This constraint ensures that each class is assigned at most one student, prevent
 
 #### 2. Limiting Weekly Assignment Hours for Each Student:
 For each student $i$, let:
-
-$hoursPerClass(j) = \text{Required hours for class } j \quad \forall j \in \text{Set of classes}$
-
-The following constraint ensures that the total weekly assignment hours for each student do not exceed 20:
 
 $$\sum_{j} hoursPerClass(j) \cdot x_{ij} \leq 20, \forall i$$
 
